@@ -159,6 +159,7 @@ const NewDossierForm = ({
       };
 
       // Send the data to the API
+      console.log("Sending data to API:", dossierData);
       const response = await fetch("/api/dossiers", {
         method: "POST",
         headers: {
@@ -166,6 +167,8 @@ const NewDossierForm = ({
         },
         body: JSON.stringify(dossierData),
       });
+
+      console.log("API response status:", response.status);
 
       if (!response.ok) {
         throw new Error("Failed to create dossier");

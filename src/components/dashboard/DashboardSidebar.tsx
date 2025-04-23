@@ -297,7 +297,14 @@ const DashboardSidebar = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button size="icon" className="w-full">
+                <Button
+                  size="icon"
+                  className="w-full"
+                  onClick={() => {
+                    const event = new CustomEvent("createDossier");
+                    window.dispatchEvent(event);
+                  }}
+                >
                   <PlusCircle className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
@@ -305,7 +312,13 @@ const DashboardSidebar = ({
             </Tooltip>
           </TooltipProvider>
         ) : (
-          <Button className="w-full">
+          <Button
+            className="w-full"
+            onClick={() => {
+              const event = new CustomEvent("createDossier");
+              window.dispatchEvent(event);
+            }}
+          >
             <PlusCircle className="mr-2 h-4 w-4" /> Nouveau dossier
           </Button>
         )}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useDossiers } from "@/hooks/useDossier";
 import {
   Card,
   CardContent,
@@ -70,7 +71,7 @@ interface Dossier {
 }
 
 interface DossiersListProps {
-  dossiers?: Dossier[];
+  dossiers?: Dossier[] | null;
   onViewDossier?: (id: string) => void;
   onCreateDossier?: () => void;
 }
@@ -122,10 +123,25 @@ interface FilterOptions {
 }
 
 const DossiersList = ({
-  dossiers = defaultDossiers,
+  dossiers: propDossiers,
   onViewDossier = () => {},
   onCreateDossier = () => {},
 }: DossiersListProps) => {
+  // Utiliser le hook useDossiers pour récupérer les dossiers depuis l'API
+  const { dossiers: fetchedDossiers, loading, error, refetch } = useDossiers();
+
+  // Utiliser les dossiers fournis en props ou ceux récupérés depuis l'API, ou par défaut les dossiers statiques
+  const dossiers =
+    fetchedDossiers && fetchedDossiers.length > 0
+      ? fetchedDossiers
+      : propDossiers || defaultDossiers;
+
+  // Log pour débogage
+  console.log("Dossiers disponibles:", {
+    propDossiers,
+    fetchedDossiers,
+    dossiers,
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("dateCreation");
@@ -298,9 +314,14 @@ const DossiersList = ({
               Liste des dossiers d'expulsion en cours de traitement
             </CardDescription>
           </div>
-          <Button onClick={onCreateDossier}>
-            <Plus className="mr-2 h-4 w-4" /> Nouveau dossier
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={refetch}>
+              Actualiser
+            </Button>
+            <Button onClick={onCreateDossier}>
+              <Plus className="mr-2 h-4 w-4" /> Nouveau dossier
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -752,7 +773,22 @@ const DossiersList = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredDossiers.length > 0 ? (
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={9} className="h-24 text-center">
+                    Chargement des dossiers...
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={9}
+                    className="h-24 text-center text-red-500"
+                  >
+                    Erreur lors du chargement des dossiers: {error}
+                  </TableCell>
+                </TableRow>
+              ) : filteredDossiers.length > 0 ? (
                 filteredDossiers.map((dossier) => (
                   <TableRow
                     key={dossier.id}

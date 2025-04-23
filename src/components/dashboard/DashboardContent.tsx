@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import DossiersList from "./DossiersList";
 import AlertsSection from "./AlertsSection";
+import AnalyticsDashboard from "./AnalyticsDashboard";
 import { Card } from "../ui/card";
 
 interface DashboardContentProps {
@@ -54,25 +55,14 @@ const DashboardContent = ({
 
         <TabsContent value="statistiques" className="space-y-6">
           <Card className="p-6 bg-white">
+            <h3 className="text-xl font-semibold mb-4">
+              Statistiques en temps réel
+            </h3>
+            <AnalyticsDashboard className="mb-6" />
+            <h3 className="text-xl font-semibold mb-4 mt-8">
+              Indicateurs de performance
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <StatCard
-                title="Dossiers actifs"
-                value="124"
-                change="+12%"
-                trend="up"
-              />
-              <StatCard
-                title="Expulsions évitées"
-                value="78"
-                change="+23%"
-                trend="up"
-              />
-              <StatCard
-                title="Délai moyen de résolution"
-                value="45 jours"
-                change="-8%"
-                trend="down"
-              />
               <StatCard
                 title="Taux de médiation réussie"
                 value="68%"

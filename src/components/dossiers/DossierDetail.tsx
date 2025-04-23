@@ -8,6 +8,7 @@ import DossierInfoCard from "./DossierInfoCard";
 import DocumentsManager from "./DocumentsManager";
 import CommunicationPanel from "./CommunicationPanel";
 import TimelineView from "./TimelineView";
+import DiagnosticSocialForm from "./DiagnosticSocialForm";
 import { useDossier } from "@/hooks/useDossier";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
@@ -233,10 +234,11 @@ const DossierDetail = ({
 
       {/* Tabs for different sections */}
       <Tabs defaultValue="documents" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-6">
+        <TabsList className="grid w-full grid-cols-4 mb-6">
           <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="communications">Communications</TabsTrigger>
           <TabsTrigger value="timeline">Chronologie</TabsTrigger>
+          <TabsTrigger value="dsf">Diagnostic Social</TabsTrigger>
         </TabsList>
 
         {/* Documents tab */}
@@ -252,6 +254,11 @@ const DossierDetail = ({
         {/* Timeline tab */}
         <TabsContent value="timeline" className="mt-0">
           <TimelineView dossierRef={dossierId} />
+        </TabsContent>
+
+        {/* Diagnostic Social et Financier tab */}
+        <TabsContent value="dsf" className="mt-0">
+          <DiagnosticSocialForm dossierId={dossierId} dossier={dossier} />
         </TabsContent>
       </Tabs>
     </div>

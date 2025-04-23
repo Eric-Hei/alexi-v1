@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import UserTypeSelector from "@/components/dashboard/UserTypeSelector";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
@@ -29,6 +29,7 @@ export default function Home() {
   };
 
   const handleViewDossier = (id: string) => {
+    console.log("Viewing dossier with ID:", id);
     setSelectedDossierId(id);
     setCurrentView("dossier-detail");
   };
@@ -51,6 +52,38 @@ export default function Home() {
     }
     // Other actions would be implemented here
   };
+
+  React.useEffect(() => {
+    const handleNavItemClicked = (event: CustomEvent) => {
+      const { view } = event.detail;
+
+      if (
+        view === "dashboard" ||
+        view === "dossiers" ||
+        view === "alertes" ||
+        view === "communications" ||
+        view === "calendrier" ||
+        view === "statistiques" ||
+        view === "intervenants" ||
+        view === "parametres"
+      ) {
+        // For now, just go back to dashboard for all views except 'new-dossier'
+        setCurrentView("dashboard");
+      }
+    };
+
+    const handleCreateDossier = () => {
+      setCurrentView("new-dossier");
+    };
+
+    window.addEventListener("nav-item-clicked", handleNavItemClicked);
+    window.addEventListener("create-dossier", handleCreateDossier);
+
+    return () => {
+      window.removeEventListener("nav-item-clicked", handleNavItemClicked);
+      window.removeEventListener("create-dossier", handleCreateDossier);
+    };
+  }, []);
 
   return (
     <div className="flex h-screen flex-col bg-background">
@@ -114,7 +147,10 @@ export default function Home() {
               <NewDossierForm
                 onSubmit={(data) => {
                   console.log("Form submitted:", data);
-                  handleBackToDashboard();
+                  // Attendre un court instant pour permettre à l'API de traiter la demande
+                  setTimeout(() => {
+                    handleBackToDashboard();
+                  }, 500);
                 }}
               />
             </div>
