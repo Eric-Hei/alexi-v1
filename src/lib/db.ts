@@ -37,4 +37,36 @@ export const db = {
       throw error;
     }
   },
+
+  // Test database connection
+  testConnection: async () => {
+    try {
+      // Try to fetch a single row from the dossiers table
+      const { data, error } = await supabase
+        .from("dossiers")
+        .select("id")
+        .limit(1);
+
+      if (error) {
+        return {
+          success: false,
+          message: `Erreur de connexion: ${error.message}`,
+          details: error,
+        };
+      }
+
+      return {
+        success: true,
+        message: "Connexion à la base de données réussie",
+        data: data,
+      };
+    } catch (error) {
+      console.error("Erreur lors du test de connexion:", error);
+      return {
+        success: false,
+        message: `Erreur inattendue: ${error instanceof Error ? error.message : "Erreur inconnue"}`,
+        details: error,
+      };
+    }
+  },
 };
